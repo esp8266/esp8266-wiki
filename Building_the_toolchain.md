@@ -19,8 +19,11 @@ cd crosstool-NG
 
 #Setting up the SDK
 download esp8266_sdk_v0.9.1.zip:  http://rghost.net/download/58019758/eff3feb46a2047a0de0d56479d21fab434429fea/esp8266_sdk_v0.9.1.zip
+
 download esp-0.0.2.zip from the forum: http://filez.zoobab.com/esp8266/esptool-0.0.2.zip
+
 extract esp8266_sdk_v0.9.1.zip to /opt/Espressif/ESP8266_SDK
+
 extract esp-0.0.2.zip in to /opt/Espressif/ESP8266_SDK/
 
 #Making the ESP tool
@@ -43,6 +46,7 @@ cd at
 wget -O Makefile https://gist.githubusercontent.com/zarya/7e1a08160bf3b7ac220f/raw/a58ed9a1243dece92b671062bb16555844b326ab/gistfile1.mak
 make
 ```
+If the compiler gives a error remove ```#include<stdlib.h>``` from ```user/at_ipCmd.c```
 
 #Uploading
 now upload the files in firmware directory to the module with esptool.py ( https://github.com/themadinventor/esptool/ )
