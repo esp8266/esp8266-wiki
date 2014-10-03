@@ -4,8 +4,7 @@
 ```
 apt-get install git autoconf build-essential gperf bison flex texinfo libtool libncurses5-dev wget gawk libc6-dev-amd64
 mkdir /opt/Espressif
-chown $username /opt/Espressif (replace $username with the name of the local user)
-```
+chown $username /opt/Espressif``` (replace $username with the name of the local user)
 
 ##as local user:
 ```
