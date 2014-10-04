@@ -21,14 +21,13 @@ cd crosstool-NG
 #Setting up the SDK
 download esp8266_sdk_v0.9.1.zip:  http://rghost.net/download/58019758/eff3feb46a2047a0de0d56479d21fab434429fea/esp8266_sdk_v0.9.1.zip
 
-download esp-0.0.2.zip from the forum: http://filez.zoobab.com/esp8266/esptool-0.0.2.zip
-
 extract esp8266_sdk_v0.9.1.zip to /opt/Espressif/ESP8266_SDK
-
-extract esp-0.0.2.zip in to /opt/Espressif/ESP8266_SDK/
 
 #Installing ESP tool
 Download the deb for esptool from the git repo
+```
+dpkg -i esptool_0.0.2-1_i386.deb
+```
 
 #Prepping the at example
 comment the line #include user_config.h from /opt/Espressif/ESP8266_SDK/include/osapi.h
