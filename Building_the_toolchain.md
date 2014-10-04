@@ -27,14 +27,8 @@ extract esp8266_sdk_v0.9.1.zip to /opt/Espressif/ESP8266_SDK
 
 extract esp-0.0.2.zip in to /opt/Espressif/ESP8266_SDK/
 
-#Making the ESP tool
-```
-cd esptool
-```
-change the line TARGET_ARCH to LINUX
-```
-make
-```
+#Installing ESP tool
+Download the deb for esptool from the git repo
 
 #Prepping the at example
 comment the line #include user_config.h from /opt/Espressif/ESP8266_SDK/include/osapi.h
@@ -44,7 +38,7 @@ mkdir esp_sources
 cd esp_sources
 cp -R /opt/Espressif/ESP8266_SDK/examples/at at
 cd at
-wget -O Makefile https://gist.githubusercontent.com/zarya/7e1a08160bf3b7ac220f/raw/a58ed9a1243dece92b671062bb16555844b326ab/gistfile1.mak
+wget -O Makefile https://raw.githubusercontent.com/zarya/esp8266-wiki/master/example.Makefile
 make
 ```
 If the compiler gives a error remove ```#include<stdlib.h>``` from ```user/at_ipCmd.c```
