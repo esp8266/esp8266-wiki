@@ -43,6 +43,9 @@ make
 If the compiler gives a error remove ```#include<stdlib.h>``` from ```user/at_ipCmd.c```
 
 #Uploading
+
+to be able to upload to the chip bind GPIO0 to GND
+
 now upload the files in firmware directory to the module with esptool.py ( https://github.com/themadinventor/esptool/ )
 ```
 esptool.py --port /dev/tty.usbmodem0E102EE1 write_flash 0x00000 0x00000.bin
