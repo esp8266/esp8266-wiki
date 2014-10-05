@@ -22,7 +22,7 @@ ESPTOOL		?= esptool.py
 ESPPORT		?= /dev/ttyUSB0
 
 # name for the target project
-TARGET		= rfxcom_light
+TARGET		= app
 
 # which modules (subdirectories) of the project to include in compiling
 MODULES		= driver user
