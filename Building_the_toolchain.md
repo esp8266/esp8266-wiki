@@ -37,7 +37,7 @@ mkdir esp_sources
 cd esp_sources
 cp -R /opt/Espressif/ESP8266_SDK/examples/at at
 cd at
-wget -O Makefile https://raw.githubusercontent.com/zarya/esp8266-wiki/master/example.Makefile
+wget -O Makefile https://raw.githubusercontent.com/esp8266/esp8266-wiki/master/examples/example.Makefile
 make
 ```
 If the compiler gives a error remove ```#include<stdlib.h>``` from ```user/at_ipCmd.c```
