@@ -44,7 +44,7 @@ user_init()
 
     //Arm the timer
     //&some_timer is the pointer
-    //500 is the fire time in ms
+    //1000 is the fire time in ms
     //0 for once and 1 for repeating
-    os_timer_arm(&some_timer, 500, 0);
+    os_timer_arm(&some_timer, 1000, 0);
 }
