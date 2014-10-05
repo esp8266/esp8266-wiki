@@ -12,17 +12,21 @@ BUILD_BASE	= build
 FW_BASE		= firmware
 
 # Base directory for the compiler
-XTENSA_TOOLS_ROOT = /opt/Espressif/crosstool-NG/builds/xtensa-lx106-elf/bin
+XTENSA_TOOLS_ROOT ?= /opt/Espressif/crosstool-NG/builds/xtensa-lx106-elf/bin
 
 # base directory of the ESP8266 SDK package, absolute
-SDK_BASE	= /opt/Espressif/ESP8266_SDK
+SDK_BASE	?= /opt/Espressif/ESP8266_SDK
+
+#Esptool.py path and port
+ESPTOOL		?= esptool.py
+ESPPORT		?= /dev/ttyUSB0
 
 # name for the target project
 TARGET		= rfxcom_light
 
 # which modules (subdirectories) of the project to include in compiling
 MODULES		= driver user
-EXTRA_INCDIR	= include /usr/include /usr/include/i386-linux-gnu
+EXTRA_INCDIR    = include /usr/include /usr/include/i386-linux-gnu
 
 # libraries used in this project, mainly provided by the SDK
 LIBS		= c gcc hal phy net80211 lwip wpa main
@@ -58,7 +62,7 @@ LD		:= $(XTENSA_TOOLS_ROOT)/xtensa-lx106-elf-gcc
 ####
 #### no user configurable options below here
 ####
-FW_TOOL		:= /usr/bin/esptool
+FW_TOOL		?= /usr/bin/esptool
 SRC_DIR		:= $(MODULES)
 BUILD_DIR	:= $(addprefix $(BUILD_BASE)/,$(MODULES))
 
@@ -80,12 +84,21 @@ MODULE_INCDIR	:= $(addsuffix /include,$(INCDIR))
 FW_FILE_1	:= $(addprefix $(FW_BASE)/,$(FW_FILE_1).bin)
 FW_FILE_2	:= $(addprefix $(FW_BASE)/,$(FW_FILE_2).bin)
 
+V ?= $(VERBOSE)
+ifeq ("$(V)","1")
+Q :=
+vecho := @true
+else
+Q := @
+vecho := @echo
+endif
+
 vpath %.c $(SRC_DIR)
 
 define compile-objects
 $1/%.o: %.c
-	@echo "CC $$<"
-	@$(CC) $(INCDIR) $(MODULE_INCDIR) $(EXTRA_INCDIR) $(SDK_INCDIR) $(CFLAGS)  -c $$< -o $$@
+	$(vecho) "CC $$<"
+	$(Q) $(CC) $(INCDIR) $(MODULE_INCDIR) $(EXTRA_INCDIR) $(SDK_INCDIR) $(CFLAGS)  -c $$< -o $$@
 endef
 
 .PHONY: all checkdirs clean
@@ -93,38 +106,43 @@ endef
 all: checkdirs $(TARGET_OUT) $(FW_FILE_1) $(FW_FILE_2)
 
 $(FW_FILE_1): $(TARGET_OUT)
-	@echo "FW $@"
-	$(FW_TOOL) -eo $(TARGET_OUT) $(FW_FILE_1_ARGS)
+	$(vecho) "FW $@"
+	$(Q) $(FW_TOOL) -eo $(TARGET_OUT) $(FW_FILE_1_ARGS)
 
 $(FW_FILE_2): $(TARGET_OUT)
-	@echo "FW $@"
-	$(FW_TOOL) -eo $(TARGET_OUT) $(FW_FILE_2_ARGS)
+	$(vecho) "FW $@"
+	$(Q) $(FW_TOOL) -eo $(TARGET_OUT) $(FW_FILE_2_ARGS)
 
 $(TARGET_OUT): $(APP_AR)
-	@echo "LD $@"
-	@$(LD) -L$(SDK_LIBDIR) $(LD_SCRIPT) $(LDFLAGS) -Wl,--start-group $(LIBS) $(APP_AR) -Wl,--end-group -o $@
+	$(vecho) "LD $@"
+	$(Q) $(LD) -L$(SDK_LIBDIR) $(LD_SCRIPT) $(LDFLAGS) -Wl,--start-group $(LIBS) $(APP_AR) -Wl,--end-group -o $@
 
 $(APP_AR): $(OBJ)
-	@echo "AR $@"
-	@$(AR) cru $@ $^
+	$(vecho) "AR $@"
+	$(Q) $(AR) cru $@ $^
 
 checkdirs: $(BUILD_DIR) $(FW_BASE)
 
 $(BUILD_DIR):
-	@mkdir -p $@
+	$(Q) mkdir -p $@
 
 firmware:
-	@mkdir -p $@
+	$(Q) mkdir -p $@
+
+flash: firmware/0x00000.bin firmware/0x40000.bin
+	-$(ESPTOOL) --port $(ESPPORT) write_flash 0x00000 firmware/0x00000.bin
+	sleep 3
+	-$(ESPTOOL) --port $(ESPPORT) write_flash 0x40000 firmware/0x40000.bin
 
 clean:
-	@rm -f $(APP_AR)
-	@rm -f $(TARGET_OUT)
-	@rm -rf $(BUILD_DIR)
-	@rm -rf $(BUILD_BASE)
+	$(Q) rm -f $(APP_AR)
+	$(Q) rm -f $(TARGET_OUT)
+	$(Q) rm -rf $(BUILD_DIR)
+	$(Q) rm -rf $(BUILD_BASE)
 
 
-	@rm -f $(FW_FILE_1)
-	@rm -f $(FW_FILE_2)
-	@rm -rf $(FW_BASE)
+	$(Q) rm -f $(FW_FILE_1)
+	$(Q) rm -f $(FW_FILE_2)
+	$(Q) rm -rf $(FW_BASE)
 
 $(foreach bdir,$(BUILD_DIR),$(eval $(call compile-objects,$(bdir))))
