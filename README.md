@@ -5,4 +5,4 @@ Online community http://www.esp8266.com supporting all aspects of the ESP8266 an
 
 For more info see our wiki https://github.com/esp8266/esp8266-wiki/wiki
 
-Check out the code examples in https://github.com/esp8266/esp8266-wiki/tree/master/examples/
+Check out the code examples in https://github.com/esp8266/source-code-examples
